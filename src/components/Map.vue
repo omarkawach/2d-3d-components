@@ -39,6 +39,7 @@ const featureLayer = new FeatureLayer({
   refreshInterval: 0.1,
 });
 
+// No item ID provided, the stream service we used cannot be made public.
 const streamLayer = new StreamLayer({
   portalItem: {
     id: "",
@@ -55,6 +56,8 @@ const basemap = new Basemap({
   },
 });
 
+// The item ID for the web map is bf804b52e86f46518703c2196488dc76
+// The web map should already have the featurelayer
 const map = new Map({
   basemap: basemap,
   layers: [featureLayer, streamLayer],
