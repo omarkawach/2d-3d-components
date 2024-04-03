@@ -1,1 +1,0 @@
-import{V as u,U as c}from"./index-8ERthB3p.js";import{f as d,n as p,s as v}from"./utils-1zmckiYC.js";async function g(e,s,i){const r=d(e),o=p(r.query,{query:v({f:"json"}),...i});s.startsWith("{")&&(s=s.slice(1,-1));const t=u(r.path,"versions",s),{data:a}=await c(t,o),{versionName:n,versionGuid:f,...m}=a;return{...m,versionIdentifier:{name:n,guid:f}}}export{g as getVersion};

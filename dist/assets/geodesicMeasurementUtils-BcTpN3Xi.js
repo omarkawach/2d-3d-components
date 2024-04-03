@@ -1,1 +1,0 @@
-import{w as m}from"./geodesicUtils-D1kRRrco.js";import{am as t,a3 as n}from"./index-8ERthB3p.js";function f(o,r,a,i,...p){return t(o)&&m(o)?r.apply(void 0,p):n(o)?a.apply(void 0,p):i.apply(void 0,p)}const s=1e5;export{s as r,f as t};

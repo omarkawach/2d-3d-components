@@ -1,1 +1,0 @@
-import{o as i,X as t,ct as h,a_ as l,P as o}from"./index-8ERthB3p.js";const n=a=>{let e=class extends a{initialize(){this.addHandles(h(()=>this.layer,"refresh",r=>{this.doRefresh(r.dataChanged).catch(s=>{l(s)||o.getLogger(this).error(s)})}),"RefreshableLayerView")}};return e=i([t("esri.layers.mixins.RefreshableLayerView")],e),e};export{n as i};
