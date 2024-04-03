@@ -3,10 +3,7 @@
  * Imports
  */
 import { ref, watchEffect } from "vue";
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import StreamLayer from "@arcgis/core/layers/StreamLayer";
-import Basemap from "@arcgis/core/Basemap";
-import Map from "@arcgis/core/Map";
+import WebMap from "@arcgis/core/WebMap";
 
 /*
  * Reactive data and methods
@@ -29,38 +26,12 @@ watchEffect(() => {
   }
 });
 
-/*
- * Variable declarations
- */
-const featureLayer = new FeatureLayer({
+// Stream layer not included!
+const map = new WebMap({
   portalItem: {
-    id: "",
+    // autocasts as new PortalItem()
+    id: "bf804b52e86f46518703c2196488dc76",
   },
-  refreshInterval: 0.1,
-});
-
-// No item ID provided, the stream service we used cannot be made public.
-const streamLayer = new StreamLayer({
-  portalItem: {
-    id: "",
-  },
-  visible: false,
-  purgeOptions: {
-    maxObservations: 5,
-  },
-});
-
-const basemap = new Basemap({
-  portalItem: {
-    id: "", // WGS84 Streets Vector webmap
-  },
-});
-
-// The item ID for the web map is bf804b52e86f46518703c2196488dc76
-// The web map should already have the featurelayer
-const map = new Map({
-  basemap: basemap,
-  layers: [featureLayer, streamLayer],
 });
 
 /*
@@ -77,28 +48,6 @@ async function onReady(event) {
   timeSlider.stops = {
     interval: featureLayer.timeInfo.interval,
   };
-
-  // const toggleLive = () => {
-  //   featureLayer.visible = !featureLayer.visible;
-  //   !featureLayer.visible
-  //     ? (timeSlider.style.display = "none")
-  //     : (timeSlider.style.display = "inline");
-  //   timeSlider.disabled = !featureLayer.visible;
-  //   if (timeSlider.disabled) {
-  //     mapElem.view.timeExtent = null;
-  //     document.getElementById("statusBlock").setAttribute("status", "valid");
-  //     document
-  //       .getElementById("statusBlock")
-  //       .setAttribute("description", "LIVE");
-  //   } else {
-  //     document.getElementById("statusBlock").setAttribute("status", "idle");
-  //     document
-  //       .getElementById("statusBlock")
-  //       .setAttribute("description", "Past observations");
-  //     timeSlider.timeExtent = timeSlider.fullTimeExtent;
-  //   }
-  //   streamLayer.visible = !streamLayer.visible;
-  // };
 }
 </script>
 
