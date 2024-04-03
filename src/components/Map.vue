@@ -3,7 +3,9 @@
  * Imports
  */
 import { ref, watchEffect } from "vue";
-import WebMap from "@arcgis/core/WebMap";
+import Map from "@arcgis/core/Map";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import Basemap from "@arcgis/core/Basemap";
 
 /*
  * Reactive data and methods
@@ -26,21 +28,34 @@ watchEffect(() => {
   }
 });
 
-// Stream layer not included!
-const map = new WebMap({
+const featureLayer = new FeatureLayer({
   portalItem: {
-    // autocasts as new PortalItem()
-    id: "bf804b52e86f46518703c2196488dc76",
+    id: "6b84497d99b74d9e937cd0074f7c7365",
+  },
+  refreshInterval: 0.1,
+});
+
+const basemap = new Basemap({
+  portalItem: {
+    id: "a9c628e802f84ad282f5c72f6354265b",
   },
 });
 
+const map = new Map({
+  basemap: basemap,
+  layers: [featureLayer],
+});
 /*
  * Functions
  */
 async function onReady(event) {
-  await event.target.whenLayerView(featureLayer);
-
   const timeSlider = timeSliderRef.value;
+
+  const featureLayer = event.target.map.allLayers.find(
+    (layer) => layer.title === "ISS track"
+  );
+
+  console.log(await event.target.whenLayerView(featureLayer));
 
   timeSlider.fullTimeExtent =
     featureLayer.timeInfo.fullTimeExtent.expandTo("hours");
