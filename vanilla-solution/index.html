@@ -8,14 +8,9 @@
     <style>
         html,
         body,
-        arcgis-map {
-            padding: 0;
-            margin: 0;
-            height: 100%;
-            width: 100%;
-        }
-
-        arcgis-scene {
+        arcgis-map,
+        arcgis-scene,
+        #mapContainer {
             padding: 0;
             margin: 0;
             height: 100%;
@@ -51,9 +46,13 @@
             padding-top: 5px;
             background-color: #000000;
         }
+
+        #sceneElem {
+            display: none;
+        }
     </style>
 
-    <link rel="stylesheet" href="https://js.arcgis.com/next/esri/themes/dark/main.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/next/esri/themes/dark/main.css" />
     <script src="https://jsdev.arcgis.com/next/"></script>
     <script type="module" src="https://js.arcgis.com/calcite-components/2.6.0/calcite.esm.js"></script>
     <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/2.6.0/calcite.css" />
@@ -61,85 +60,39 @@
 </head>
 
 <body>
-
     <calcite-shell class="calcite-mode-dark">
         <calcite-navigation slot="header">
             <calcite-navigation-logo heading="Track the International Space Station" slot="logo" target="_blank" />
         </calcite-navigation>
 
-        <arcgis-map id="mapElem" destroy-disabled>
-            <arcgis-expand position="top-left">
-                <arcgis-legend></arcgis-legend>
-            </arcgis-expand>
-            <arcgis-placement position="top-left">
-                <div id="toggle">
-                    <calcite-icon icon="globe" id="2d-3d-toggle"></calcite-icon>
-                </div>
-            </arcgis-placement>
-        </arcgis-map>
+        <div id="mapContainer">
+            <arcgis-map id="mapElem">
+                <arcgis-expand position="top-left">
+                    <arcgis-legend></arcgis-legend>
+                </arcgis-expand>
+                <arcgis-placement position="top-left">
+                    <div id="toggle">
+                        <calcite-icon icon="globe" id="2d-3d-toggle-map"></calcite-icon>
+                    </div>
+                </arcgis-placement>
+            </arcgis-map>
+        
+            <arcgis-scene id="sceneElem">
+                <arcgis-expand position="top-left">
+                    <arcgis-legend></arcgis-legend>
+                </arcgis-expand>
+                <arcgis-placement position="top-left">
+                    <div id="toggle">
+                        <calcite-icon icon="globe" id="2d-3d-toggle-scene"></calcite-icon>
+                    </div>
+                </arcgis-placement>
+            </arcgis-scene>
+        </div>
 
         <arcgis-time-slider loop time-visible reference-element="#mapElem"></arcgis-time-slider>
-
     </calcite-shell>
 
-    <script>
-        async function load() {
-            const Map = await $arcgis.import("esri/Map");
-            const FeatureLayer = await $arcgis.import("esri/layers/FeatureLayer");
-            const Basemap = await $arcgis.import("esri/Basemap");
-            const timeSlider = document.querySelector("arcgis-time-slider");
-            const mapElem = document.querySelector("arcgis-map");
-            let currentView = mapElem;
-            const featureLayer = new FeatureLayer({
-                portalItem: {
-                    id: "6b84497d99b74d9e937cd0074f7c7365"
-                },
-                refreshInterval: 0.1
-            });
-            const basemap = new Basemap({
-                portalItem: {
-                    id: "a9c628e802f84ad282f5c72f6354265b"
-                }
-            });
-            const map = new Map({
-                basemap: basemap,
-                layers: [featureLayer]
-            });
-            mapElem.map = map;
-            mapElem.addEventListener("arcgisViewReadyChange", async ({
-                target
-            }) => {
-                const lv = await target.whenLayerView(featureLayer);
-                timeSlider.fullTimeExtent = featureLayer.timeInfo.fullTimeExtent.expandTo("hours");
-                timeSlider.stops = {
-                    interval: featureLayer.timeInfo.interval
-                };
-            });
-            const toggle = document.getElementById("2d-3d-toggle");
-            const shell = document.querySelector("calcite-shell");
-            let sceneElem;
-            toggle.addEventListener("click", () => {
-                if (!sceneElem) {
-                    sceneElem = document.createElement("arcgis-scene");
-                    sceneElem.map = map;
-                    sceneElem.destroyDisabled = true;
-                }
-                //switch between 2D and 3D
-                console.log(currentView);
-                currentView?.remove();
-                if (currentView === mapElem) {
-                    currentView = sceneElem;
-                    timeSlider.referenceElement = sceneElem;
-                } else {
-                    currentView = mapElem;
-                    timeSlider.referenceElement = mapElem;
-                }
-                shell.insertBefore(currentView, timeSlider);
-            });
-        }
-        load();
-    </script>
-
+    <script src="./main.js"></script>
 </body>
 
 </html>
